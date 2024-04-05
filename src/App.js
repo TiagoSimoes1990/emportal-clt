@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 
-import Topbar from './scenes/user-modal-global/topbar';
+import Topbar from './scenes/topbar/topbar';
 
 // ProSide Bar plugin
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
