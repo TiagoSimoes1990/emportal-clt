@@ -47,7 +47,7 @@ function App() {
   return (
     <Box className="App">
       <Topbar/>
-      <Box display={'flex'} flexDirection={'row'} justifyContent={'center'} m={10}>
+      <Box display={'flex'} flexDirection={'row'} flexWrap={'wrap'} justifyContent={'center'} mt={10}>
         {userData.map((user) => {
           return(
             <UserCard

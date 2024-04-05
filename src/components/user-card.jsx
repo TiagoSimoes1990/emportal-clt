@@ -7,13 +7,13 @@ import '../styles/user-card.css';
 
 function UserCard(props) {
   return (
-    <Card className="user-card" sx={{minWidth: 250, maxWidth: 275 }}>
+    <Card className="user-card" sx={{minWidth: 250, maxWidth: 275, m:1 }}>
       <CardActionArea
         onClick={ () => {
           props.onCardClick (props.id)
           }
         }>
-        <img className="circle-img" src={props.userPhoto} alt={props.firstName + ' ' + props.lastName + " Photography"} />
+        <img className="circle-img" src={props.userPhoto} />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {props.firstName + " " + props.lastName}
