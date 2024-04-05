@@ -35,45 +35,32 @@ function App() {
 
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleUserCardClick = (id) => {
     console.log(id);
+    setOpen(true);
   }
 
   return (
-    <Box>
-      <Box>
-        <Topbar/>
-      </Box>
-      <Box className="App">
-        <UserCard
-          userPhoto = {userPhoto}
-          firstName = {"Tiago"}
-          lastName = {"Simões"}
-          position = {"Software Engineer"}
-          email = {"tiago.simoes@gmail.com"}
-          phoneNumber = {"+351 912 738 499"}
-          onCardClick = {handleClickOpen}/>
-
+    <Box className="App">
+      <Topbar/>
+      <Box display={'flex'} flexDirection={'row'} justifyContent={'center'} m={10}>
         {userData.map((user) => {
           return(
             <UserCard
-            key = {user.id}
-            id = {user.id}
-            userPhoto = {user.photo}
-            firstName = {user.first_name}
-            lastName = {user.last_name}
-            position = {user.category_id}
-            email = {user.email}
-            phoneNumber = {user.phone_number}
-            onCardClick = {handleClickOpen}/>
+              key = {user.id}
+              id = {user.id}
+              userPhoto = {user.photo}
+              firstName = {user.first_name}
+              lastName = {user.last_name}
+              position = {user.category_id}
+              email = {user.email}
+              phoneNumber = {user.phone_number}
+              onCardClick = {handleUserCardClick}
+            />
             )
           }
         )}
