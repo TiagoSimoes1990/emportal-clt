@@ -8,7 +8,11 @@ import '../styles/user-card.css';
 function UserCard(props) {
   return (
     <Card className="user-card" sx={{ maxWidth: 275 }}>
-      <CardActionArea>
+      <CardActionArea
+        onClick={ () => {
+          props.onCardClick (props.id)
+          }
+        }>
         <img className="circle-img" src={props.userPhoto} alt={props.firstName + ' ' + props.lastName + " Photography"} />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
