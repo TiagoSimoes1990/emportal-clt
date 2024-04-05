@@ -7,7 +7,7 @@ import '../styles/user-card.css';
 
 function UserCard(props) {
   return (
-    <Card className="user-card" sx={{ maxWidth: 275 }}>
+    <Card className="user-card" sx={{minWidth: 250, maxWidth: 275 }}>
       <CardActionArea
         onClick={ () => {
           props.onCardClick (props.id)
