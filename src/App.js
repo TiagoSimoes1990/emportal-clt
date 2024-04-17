@@ -27,12 +27,11 @@ import { userData } from './data/mockdata';
 import { Box } from '@mui/material';
 
 // Images imports
-const userPhoto = '../../images/TS_ProfilePhoto.jpg'
+const dummyUserProfile = 'src/images/dummy-profile-pic-300x300-1.png'
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
+// -----------------------
+// Main component
+// -----------------------
 function App() {
 
   const [open, setOpen] = React.useState(false);
@@ -58,7 +57,8 @@ function App() {
             <UserCard
               key = {user.id}
               id = {user.id}
-              userPhoto = {user.photo}
+              // userPhoto = {user.photo}
+              userPhoto = {dummyUserProfile}
               firstName = {user.first_name}
               lastName = {user.last_name}
               position = {user.category_id}
