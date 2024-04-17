@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 
 import Topbar from './scenes/topbar/topbar';
+import ModalSidebar from './scenes/user-modal-global/modal-sidebar';
 
 // ProSide Bar plugin
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
@@ -65,13 +66,12 @@ function App() {
           }
         )}
       </Box>
-      <Box>
-        <Dialog
-          fullScreen
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={Transition}
-        >
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
           <AppBar>
             <Toolbar>
               <IconButton
@@ -90,29 +90,33 @@ function App() {
               </Button>
             </Toolbar>
           </AppBar>
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1, mt:10}}>
             <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <ListItemButton>
-                  <ListItemText primary="Profile"/>
-                </ListItemButton>
-                <Divider />
-                <ListItemButton>
-                  <ListItemText primary="Item 2"/>
-                </ListItemButton>
-                <Divider />
-                <ListItemButton>
-                  <ListItemText primary="Item 3"/>
-                </ListItemButton>
-                <Divider />
+              <Grid item xs={2}>
+                  <ListItemButton
+                    onClick={ () => {
+                      console.log("Clicked on Profile Button");
+                    }}>
+                      <ListItemText primary="Profile"/>
+                  </ListItemButton>
+                  <Divider />
+                  <ListItemButton>
+                      <ListItemText primary="Item 2"/>
+                  </ListItemButton>
+                  <Divider />
+                  <ListItemButton>
+                      <ListItemText primary="Item 3"/>
+                  </ListItemButton>
+                  <Divider />
               </Grid>
-              <Grid item xs={9}>
-                
+              <Grid item xs={10}>
+              <Box>
+                  
+              </Box>
               </Grid>
             </Grid>
           </Box>
-        </Dialog>
-      </Box>
+      </Dialog>
     </Box>
   );  
 }
