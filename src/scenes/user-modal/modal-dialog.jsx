@@ -24,9 +24,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function ModalDialog(props) {
 
+  const [tabIsOpen, setTabIsOpen] = React.useState('Profile');
+
   // Hook for debugging
   React.useEffect(() => {
     console.log(props.expanded);
+    console.log(tabIsOpen);
 
   });
 
@@ -63,13 +66,16 @@ export default function ModalDialog(props) {
               <Grid item xs={2}>
                   <ListItemButton
                     onClick={ () => {
-                      console.log("Clicked on Profile Button");
+                      setTabIsOpen('Profile');
                     }}>
                       <ListItemText primary="Profile"/>
                   </ListItemButton>
                   <Divider />
-                  <ListItemButton>
-                      <ListItemText primary="Item 2"/>
+                  <ListItemButton
+                    onClick={ () => {
+                      setTabIsOpen('Absences');
+                    }}>
+                      <ListItemText primary="Absences"/>
                   </ListItemButton>
                   <Divider />
                   <ListItemButton>
@@ -78,12 +84,38 @@ export default function ModalDialog(props) {
                   <Divider />
               </Grid>
               <Grid item xs={10}>
-              <Box>
-                  
-              </Box>
+                <Profile
+                  tabExpanded = {tabIsOpen} >
+                </Profile>
+                <Absences
+                  tabExpanded = {tabIsOpen} >
+                </Absences>
               </Grid>
             </Grid>
           </Box>
       </Dialog>
   );
+}
+
+
+const Profile = (props) =>  {
+
+  if (props.tabExpanded === 'Profile') {
+    return (
+      <Box>
+        This is "Profile" tab
+      </Box>
+    )
+  }
+}
+
+const Absences = (props) =>  {
+
+  if (props.tabExpanded === 'Absences') {
+    return(
+      <Box>
+          This is "Absences" tab
+      </Box>
+    )
+  }
 }
