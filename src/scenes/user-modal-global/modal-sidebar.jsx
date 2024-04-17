@@ -11,9 +11,10 @@ function ModalSidebar() {
 
     return(
         <Grid container spacing={2}>
+            {/* Sidebar */}
             <Grid item xs={3}>
                 <ListItemButton>
-                    <ListItemText primary="Profile"/>
+                    <ListItemText primary="Profiles"/>
                 </ListItemButton>
                 <Divider />
                 <ListItemButton>
