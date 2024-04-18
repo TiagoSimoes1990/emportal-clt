@@ -14,8 +14,6 @@ import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 
 // In-house components
 import UserAvatar from '../../components/user-avatar';
@@ -31,23 +29,11 @@ const centerDivColDir = {
   justifyContent: "center", 
   alignItems: "center",
   borderRadius: "0.25rem", 
-  backgroundColor: "grey",
+  backgroundColor: "#F9F7F7",
   margin: "0.5rem"
 }
 
-const tilesStyle = {
-  borderRadius: "0.25rem", 
-  backgroundColor: "grey"
-}
-
-// const Item = styled(Paper)(({ theme }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: 'center',
-//   color: theme.palette.text.secondary,
-// }));
-
+// Transitions
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -145,34 +131,40 @@ export default function ModalDialog(props) {
 // ------------------------
 const Profile = (props) =>  {
 
+  console.log(props.userData);
   if (props.tabExpanded === 'Profile') {
     return (
       <Box>
           <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <div style={centerDivColDir} >
-                <UserAvatar
+            <Grid item xs={4} mt={'4rem'} height={''}>
+              <Box style={centerDivColDir}>
+                <Box mt={'-4rem'}>
+                  <UserAvatar
                   alt={props.userData.first_name}
                   src={props.userData.photo}>
-                </UserAvatar>
-                <div style={{ display: 'flex', flexDirection: 'row'}}>
-                  <EmailIcon> </EmailIcon>{props.userData.email}
-                </div>
-                
-              </div>
-              <div style={centerDivColDir}>
-              
-              </div>
+                  </UserAvatar>
+                </Box>
+                <Typography gutterBottom variant="h7" component="div">
+                  {props.userData.category_id}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" style={{ display: 'flex', flexDirection: 'row'}}>
+                  <EmailIcon/>{props.userData.email}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {props.userData.phone_number}
+                </Typography>
+                <Divider></Divider>
+              </Box>
             </Grid>
-            <Grid item xs={8} style={tilesStyle}>
+            <Grid item xs={8}>
               <div style={centerDivColDir}>
                 This is "Profile" tab [0,1]
               </div>
             </Grid>
-            <Grid item xs={4} style={tilesStyle}>
+            <Grid item xs={4}>
             This is "Profile" tab [1,0]
             </Grid>
-            <Grid item xs={8} style={tilesStyle}>
+            <Grid item xs={8}>
             This is "Profile" tab [1,1]
             </Grid>
           </Grid>
