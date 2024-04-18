@@ -26,9 +26,6 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { userData } from './data/mockdata';
 import { Box } from '@mui/material';
 
-// Images imports
-const dummyUserProfile = 'src/images/dummy-profile-pic-300x300-1.png'
-
 // -----------------------
 // Main component
 // -----------------------
@@ -57,8 +54,7 @@ function App() {
             <UserCard
               key = {user.id}
               id = {user.id}
-              // userPhoto = {user.photo}
-              userPhoto = {dummyUserProfile}
+              userPhoto = {user.photo}
               firstName = {user.first_name}
               lastName = {user.last_name}
               position = {user.category_id}

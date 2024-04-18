@@ -24,9 +24,6 @@ import UserAvatar from '../../components/user-avatar';
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 
-// Images imports
-const dummyUserProfile = 'src/images/dummy-profile-pic-300x300-1.png'
-
 // Style Objects
 const centerDivColDir = {
   display: "flex", 
@@ -156,9 +153,8 @@ const Profile = (props) =>  {
               <div style={centerDivColDir} >
                 <UserAvatar
                   alt={props.userData.first_name}
-                  src={dummyUserProfile}>
+                  src={props.userData.photo}>
                 </UserAvatar>
-                {props.userData.first_name} {props.userData.last_name}
                 <div style={{ display: 'flex', flexDirection: 'row'}}>
                   <EmailIcon> </EmailIcon>{props.userData.email}
                 </div>

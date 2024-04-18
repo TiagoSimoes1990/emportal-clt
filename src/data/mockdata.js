@@ -1,3 +1,6 @@
+// Images imports
+import dummyUserProfile from '../images/dummy-profile-pic-300x300-1.png'
+
 export const userData = [
     {
         id:1,
@@ -9,10 +12,10 @@ export const userData = [
         phone_number:"+351 912 738 499",
         email:"tiagojfsimoes@gmail.com",
         state:"true",
-        photo:"",
-        profile_id:"1",
-        language_id:"2",
-        category_id:"3"
+        photo:dummyUserProfile,
+        profile_id:"admin",
+        language_id:"pt",
+        category_id:"Professional Software Engineer"
     },
     {
         id:2,
@@ -24,10 +27,10 @@ export const userData = [
         phone_number:"+351 912 738 499",
         email:"jonatsnow@gmail.com",
         state:"true",
-        photo:"",
-        profile_id:"3",
-        language_id:"1",
-        category_id:"5"
+        photo:dummyUserProfile,
+        profile_id:"user",
+        language_id:"en",
+        category_id:"Senior Software Engineer"
     },
     {
         id:3,
@@ -39,9 +42,9 @@ export const userData = [
         phone_number:"+351 912 738 499",
         email:"elliewilliams@gmail.com",
         state:"true",
-        photo:"",
-        profile_id:"2",
-        language_id:"1",
-        category_id:"3"
+        photo:dummyUserProfile,
+        profile_id:"manager",
+        language_id:"en",
+        category_id:"Junior Software Engineer"
     }
 ]
