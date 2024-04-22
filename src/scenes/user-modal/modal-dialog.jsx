@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper'
 
 // In-house components
 import UserAvatar from '../../components/user-avatar';
@@ -21,17 +22,21 @@ import UserAvatar from '../../components/user-avatar';
 // Icons
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
+import SmartphoneIcon from '@mui/icons-material/Smartphone';
+import { margin } from '@mui/system';
+
 
 // Style Objects
 const centerDivColDir = {
   display: "flex", 
   flexDirection: "column", 
-  justifyContent: "center", 
   alignItems: "center",
-  borderRadius: "0.25rem", 
   backgroundColor: "#F9F7F7",
-  margin: "0.5rem"
+  margin: "0.5rem",
+  height: "100%",
 }
+
+
 
 // Transitions
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -83,8 +88,7 @@ export default function ModalDialog(props) {
               </Button>
             </Toolbar>
           </AppBar>
-          <Box sx={{ flexGrow: 1, mt:10}}>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} mt={7}>
               <Grid item xs={2}>
                   <ListItemButton
                     onClick={ () => {
@@ -108,7 +112,7 @@ export default function ModalDialog(props) {
                   </ListItemButton>
                   <Divider />
               </Grid>
-              <Grid item xs={10}>
+              <Grid item xs={10} >
                 <Profile
                   tabExpanded = {tabIsOpen} 
                   userData = {props.userData}>
@@ -121,7 +125,6 @@ export default function ModalDialog(props) {
                 </Timesheet>
               </Grid>
             </Grid>
-          </Box>
       </Dialog>
   );
 }
@@ -134,41 +137,67 @@ const Profile = (props) =>  {
   console.log(props.userData);
   if (props.tabExpanded === 'Profile') {
     return (
-      <Box>
-          <Grid container spacing={2}>
-            <Grid item xs={4} mt={'4rem'} height={''}>
-              <Box style={centerDivColDir}>
-                <Box mt={'-4rem'}>
-                  <UserAvatar
+          <Grid container spacing={2} height={'93vh'} p={3}>
+            <Grid item md={4} flex={1}>
+              <Paper elevation={3} style={centerDivColDir}>
+                <UserAvatar
                   alt={props.userData.first_name}
                   src={props.userData.photo}>
-                  </UserAvatar>
-                </Box>
+                </UserAvatar>
                 <Typography gutterBottom variant="h7" component="div">
                   {props.userData.category_id}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" style={{ display: 'flex', flexDirection: 'row'}}>
                   <EmailIcon/>{props.userData.email}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {props.userData.phone_number}
+                <Typography variant="body2" color="text.secondary" style={{ display: 'flex', flexDirection: 'row'}}>
+                  <SmartphoneIcon/>{props.userData.phone_number}
                 </Typography>
-                <Divider></Divider>
-              </Box>
+                <Divider style={{margin: '0.5rem', width:'95%'}}/>
+                <Typography variant="h7" color="text.primary" component="div">
+                  About Me
+                </Typography>
+                <Typography variant="body2" color="text.secondary" m={'0.5rem'}>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
+                </Typography>
+              </Paper>
             </Grid>
-            <Grid item xs={8}>
-              <div style={centerDivColDir}>
-                This is "Profile" tab [0,1]
-              </div>
-            </Grid>
-            <Grid item xs={4}>
-            This is "Profile" tab [1,0]
-            </Grid>
-            <Grid item xs={8}>
-            This is "Profile" tab [1,1]
+            <Grid item container spacing={2} md={8}>
+              <Grid item>
+                <Paper elevation={3} style={centerDivColDir}>
+                <Typography variant="h6" color="text.primary" component="div">
+                    Skills
+                  </Typography>
+                  <Divider style={{margin: '0.5rem', width:'95%'}}/>
+                  <Typography variant="body2" color="text.secondary">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item>
+                <Paper elevation={3} style={centerDivColDir}>
+                <Typography variant="h6" color="text.primary" component="div">
+                    Projects
+                  </Typography>
+                  <Divider style={{margin: '0.5rem', width:'95%'}}/>
+                  <Typography variant="body2" color="text.secondary">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item>
+                <Paper elevation={3} style={centerDivColDir}>
+                <Typography variant="h6" color="text.primary" component="div">
+                    Pendings
+                  </Typography>
+                  <Divider style={{margin: '0.5rem', width:'95%'}}/>
+                  <Typography variant="body2" color="text.secondary">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
+                  </Typography>
+                </Paper>
+              </Grid>
             </Grid>
           </Grid>
-      </Box>
     )
   }
 }

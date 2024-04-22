@@ -15,7 +15,9 @@ export const userData = [
         photo:dummyUserProfile,
         profile_id:"admin",
         language_id:"pt",
-        category_id:"Professional Software Engineer"
+        category_id:"Professional Software Engineer",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!",
+        employe_number:"201"
     },
     {
         id:2,
@@ -30,7 +32,9 @@ export const userData = [
         photo:dummyUserProfile,
         profile_id:"user",
         language_id:"en",
-        category_id:"Senior Software Engineer"
+        category_id:"Senior Software Engineer",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!",
+        employe_number:"202"
     },
     {
         id:3,
@@ -45,6 +49,8 @@ export const userData = [
         photo:dummyUserProfile,
         profile_id:"manager",
         language_id:"en",
-        category_id:"Junior Software Engineer"
+        category_id:"Junior Software Engineer",
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!",
+        employe_number:"203"
     }
 ]
