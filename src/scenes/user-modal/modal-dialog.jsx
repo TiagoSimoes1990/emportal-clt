@@ -32,7 +32,6 @@ const centerDivColDir = {
   flexDirection: "column", 
   alignItems: "center",
   backgroundColor: "#F9F7F7",
-  margin: "0.5rem",
   height: "100%",
 }
 
@@ -157,7 +156,7 @@ const Profile = (props) =>  {
                 <Typography variant="h7" color="text.primary" component="div">
                   About Me
                 </Typography>
-                <Typography variant="body2" color="text.secondary" m={'0.5rem'}>
+                <Typography variant="body2" color="text.secondary" m="1rem">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
                 </Typography>
               </Paper>
@@ -169,7 +168,7 @@ const Profile = (props) =>  {
                     Pendings
                   </Typography>
                   <Divider style={{margin: '0.5rem', width:'95%'}}/>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" m="1rem">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
                   </Typography>
                 </Paper>
@@ -180,7 +179,7 @@ const Profile = (props) =>  {
                     Projects
                   </Typography>
                   <Divider style={{margin: '0.5rem', width:'95%'}}/>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" m="1rem">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
                   </Typography>
                 </Paper>
@@ -191,7 +190,7 @@ const Profile = (props) =>  {
                     Skills
                   </Typography>
                   <Divider style={{margin: '0.5rem', width:'95%'}}/>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" m="1rem">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
                   </Typography>
                 </Paper>
