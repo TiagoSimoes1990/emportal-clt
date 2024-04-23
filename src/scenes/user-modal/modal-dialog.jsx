@@ -166,7 +166,7 @@ const Profile = (props) =>  {
               <Grid item>
                 <Paper elevation={3} style={centerDivColDir}>
                 <Typography variant="h6" color="text.primary" component="div">
-                    Skills
+                    Pendings
                   </Typography>
                   <Divider style={{margin: '0.5rem', width:'95%'}}/>
                   <Typography variant="body2" color="text.secondary">
@@ -188,7 +188,7 @@ const Profile = (props) =>  {
               <Grid item>
                 <Paper elevation={3} style={centerDivColDir}>
                 <Typography variant="h6" color="text.primary" component="div">
-                    Pendings
+                    Skills
                   </Typography>
                   <Divider style={{margin: '0.5rem', width:'95%'}}/>
                   <Typography variant="body2" color="text.secondary">
