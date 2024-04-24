@@ -15,6 +15,14 @@ import Slide from '@mui/material/Slide';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Stack from '@mui/material/Stack';
 
 // In-house components
 import UserAvatar from '../../components/user-avatar';
@@ -23,7 +31,8 @@ import UserAvatar from '../../components/user-avatar';
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';
-import { margin } from '@mui/system';
+import EditIcon from '@mui/icons-material/Edit';
+import EditOffIcon from '@mui/icons-material/EditOff';
 
 
 // Style Objects
@@ -133,6 +142,22 @@ export default function ModalDialog(props) {
 // ------------------------
 const Profile = (props) =>  {
 
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [editFields, setEditFields] = React.useState(false);
+
+  // Function toggles the visibility of the password
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  // Function to prevent the default behavior when the mouse down event occurs. 
+  // This is necessary to ensure the expected behavior when interacting with the password toggle, 
+  // avoiding any unintended selections or other default behaviors.
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  // Function toggles the edit of profile fields
+  const handleClickEdit = () => setEditFields((edit) => !edit);
+
   console.log(props.userData);
   if (props.tabExpanded === 'Profile') {
     return (
@@ -152,6 +177,46 @@ const Profile = (props) =>  {
                 <Typography variant="body2" color="text.secondary" style={{ display: 'flex', flexDirection: 'row'}}>
                   <SmartphoneIcon/>{props.userData.phone_number}
                 </Typography>
+                <Divider style={{margin: '0.5rem', width:'95%'}}/>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" >
+                  <Typography variant="h7" color="text.primary" component="div">
+                    Information
+                  </Typography>
+                  <Typography variant="h7" component="div">
+                    <IconButton
+                      aria-label="toggle edit option"
+                      onClick={handleClickEdit}
+                      edge="end"
+                    >
+                      {editFields ? <EditOffIcon/> : <EditIcon />}
+                    </IconButton>
+                  </Typography>
+                </Stack>
+                <Typography display={"flex"} alignItems={"center"} component="div">
+                  <TextField
+                    label="Username">
+                  </TextField>
+                  <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type={showPassword ? 'text' : 'password'}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Password"
+                    />
+                  </FormControl>
+                </Typography>      
                 <Divider style={{margin: '0.5rem', width:'95%'}}/>
                 <Typography variant="h7" color="text.primary" component="div">
                   About Me
