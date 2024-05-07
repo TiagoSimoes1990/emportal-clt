@@ -194,7 +194,7 @@ const Profile = (props) =>  {
                     </IconButton>
                   </Typography>
                 </Stack>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} p={1}>
                   <Grid item xs={12} md={6}>
                     <TextField
                       disabled={!editFields}
