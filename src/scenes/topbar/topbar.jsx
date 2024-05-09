@@ -110,21 +110,21 @@ function Topbar() {
     // TODO: Show a popup menu with a list of all notifications on a device with a widerscreen
     alert("Show a popover notifications list");
   }
-  // ---------------------------------------------------------
-  // Function to fetch users list
-  const fetchUserList = React.useCallback(async function fetchUserList() {
-    try {
-      const jsonResponse = await getRequest('usr-list');
-      // If succeeded ...
-      if (jsonResponse.status === 200) {
-        console.log("<< MENSAGEM DE RETORNO  - fetchUserList >>\n");
-        console.log("Dados :"+JSON.stringify(jsonResponse.data.data));
-      }
+  // // ---------------------------------------------------------
+  // // Function to fetch users list
+  // const fetchUserList = React.useCallback(async function fetchUserList() {
+  //   try {
+  //     const jsonResponse = await getRequest('usr-list');
+  //     // If succeeded ...
+  //     if (jsonResponse.status === 200) {
+  //       console.log("<< MENSAGEM DE RETORNO  - fetchUserList >>\n");
+  //       console.log("Dados :"+JSON.stringify(jsonResponse.data.data));
+  //     }
       
-    } catch (error) {
+  //   } catch (error) {
       
-    }
-  }, []);
+  //   }
+  // }, []);
 
   // ---------------------------------------------------------
   // Function to request user data from database
@@ -144,9 +144,9 @@ function Topbar() {
 
   // ----------------------------------
   // After rendering and after every update, fetch the data to fill in the table
-  React.useEffect(() => {
-    fetchUserList();
-  }, [fetchUserList]);
+  // React.useEffect(() => {
+  //   fetchUserList();
+  // }, [fetchUserList]);
 // ---------------------------------------------------------
 // Widerscreens Menu Render Handling
   const menuId = 'primary-search-account-menu';
