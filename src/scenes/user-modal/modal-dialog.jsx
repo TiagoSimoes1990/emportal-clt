@@ -35,6 +35,8 @@ import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import EditIcon from '@mui/icons-material/Edit';
 import EditOffIcon from '@mui/icons-material/EditOff';
 
+// Images imports
+import dummyUserProfile from '../../images/dummy-profile-pic-300x300-1.png'
 
 // Style Objects
 const centerDivColDir = {
@@ -44,8 +46,6 @@ const centerDivColDir = {
   backgroundColor: "#F9F7F7",
   height: "100%",
 }
-
-
 
 // Transitions
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -66,7 +66,8 @@ export default function ModalDialog(props) {
   React.useEffect(() => {
     console.log(props.expanded);
     console.log(tabIsOpen);
-    console.log(props.userData.first_name);
+    console.log(props.userData.first_names);
+    console.log(props.userData.photo);
   });
 
   return (
@@ -87,7 +88,7 @@ export default function ModalDialog(props) {
                 <CloseIcon />
               </IconButton>
               <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                {props.userData.full_name}
+                {props.userData.first_names + ' ' + props.userData.last_names}
               </Typography>
               <Button 
                 autoFocus color="inherit" 
@@ -166,8 +167,8 @@ const Profile = (props) =>  {
             <Grid item md={4} flex={1}>
               <Paper elevation={3} style={centerDivColDir}>
                 <UserAvatar
-                  alt={props.userData.first_name}
-                  src={props.userData.photo}>
+                  alt={props.userData.first_names}
+                  src={props.userData.photo? props.userData.photo : dummyUserProfile}>
                 </UserAvatar>
                 <Typography gutterBottom variant="h7" component="div">
                   {props.userData.category_id}
