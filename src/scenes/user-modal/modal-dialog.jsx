@@ -266,7 +266,7 @@ const Profile = (props) =>  {
                       variant="outlined">
                       <InputLabel variant='outlined'>Current Password</InputLabel>
                       <OutlinedInput
-                        id="outlined-adornment-password"
+                        id="outlined-adornment-current-password"
                         label="Current Password"
                         type={showPassword ? 'text' : 'password'}
                         endAdornment={
@@ -291,7 +291,7 @@ const Profile = (props) =>  {
                       variant="outlined">
                       <InputLabel variant='outlined'>New Password</InputLabel>
                       <OutlinedInput
-                        id="outlined-adornment-password"
+                        id="outlined-adornment-new-password"
                         label="New Password"
                         type={showPassword ? 'text' : 'password'}
                         endAdornment={
@@ -316,7 +316,7 @@ const Profile = (props) =>  {
                       variant="outlined">
                       <InputLabel variant='outlined'>Confirm New Password</InputLabel>
                       <OutlinedInput
-                        id="outlined-adornment-password"
+                        id="outlined-adornment-conf-new-password"
                         label="Confirm New Password"
                         type={showPassword ? 'text' : 'password'}
                         endAdornment={
