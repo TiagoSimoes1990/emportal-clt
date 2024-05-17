@@ -11,36 +11,65 @@
 
 import axios from "axios";
 
+const config = require('../utils/config');  // Load environment variables from .env file
+
 const axiosClient = axios.create();
 
-// TODO: Replace the BaseURL to get the information from a '.env' file
-axiosClient.defaults.baseURL = 'http://localhost:3000/api/';
-
-axiosClient.defaults.headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/json'
-}
-
+// Base URL from environment variable
+axiosClient.defaults.baseURL = process.env.API_BASE_URL || 'http://localhost:3000/api'; // Use a default if not set;
 // Default request timeout
 axiosClient.defaults.timeout = 6000;
 
-// Group Axios HTTP verbs like GET, POST, DELETE, and PATCH
-export function getRequest(URL, headers = {}) {
-    return axiosClient.get(`/${URL}`, headers)
-        .then(response => response);
+// axiosClient.defaults.headers = {
+//     'Content-Type': 'application/json',
+//     Accept: 'application/json'
+// }
+
+// Custom Error Class
+class RequestError extends Error {
+    constructor(message, response) {
+      super(message);
+      this.response = response;
+    }
+  }
+
+// Axios HTTP verbs with error handling
+export async function getRequest(URL, headers = {}) {
+    try {
+        const response = await axiosClient.get(URL, { headers });
+        return response.data;
+    } catch (error) {
+        console.error(`GET request error on ${URL}:`, error);
+        throw new RequestError(`Error in GET request on ${URL}`, error.response);
+    }
+  }
+
+export async function postRequest(URL, payload, headers = { 'Content-Type': 'application/json' }) {
+    try {
+        const response = await axiosClient.post(URL, payload, { headers });
+        return response.data;
+    } catch (error) {
+        console.error(`POST request error on ${URL}:`, error);
+        throw new RequestError(`Error in POST request on ${URL}`, error.response);
+    }
+  }
+
+export async function patchRequest(URL, payload, headers = { 'Content-Type': 'application/json' }) {
+    try {
+        const response = await axiosClient.patch(URL, payload, { headers });
+        return response.data;
+    } catch (error) {
+        console.error(`PATCH request error on ${URL}:`, error);
+        throw new RequestError(`Error in PATCH request on ${URL}`, error.response);
+    }
 }
 
-export function postRequest(URL, payload, headers = {}) {
-    return axiosClient.post(`/${URL}`, payload, headers)
-        .then(response => response);
-}
-
-export function patchRequest(URL, payload) {
-    return axiosClient.patch(`/${URL}`, payload)
-        .then(response => response);
-}
-
-export function deleteRequest(URL) {
-    return axiosClient.delete(`/${URL}`)
-        .then(response => response);
+export async function deleteRequest(URL) {
+    try {
+        const response = await axiosClient.delete(URL);
+        return response.data;
+    } catch (error) {
+        console.error(`DELETE request error on ${URL}:`, error);
+        throw new RequestError(`Error in DELETE request on ${URL}`, error.response);
+    }
 }
