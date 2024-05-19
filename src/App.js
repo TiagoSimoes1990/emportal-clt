@@ -41,14 +41,13 @@ function App() {
 
   // ---------------------------------------------------------
   // Function to fetch users list
-  const fetchUserList = React.useCallback(async function fetchUserList() {
+  const fetchActiveUsers = React.useCallback(async function fetchActiveUsers() {
     try {
-      const jsonResponse = await getRequest('usr-list');
-      // If succeeded ...
-      if (jsonResponse.status === 200) {
-        console.log("<< MENSAGEM DE RETORNO  - fetchUserList >>\n");
-        console.log("Dados :" + JSON.stringify(jsonResponse.data));
-        setUserList(jsonResponse.data);
+      const userData = await getRequest('/users/active');
+      if (userData) { // Check if data was fetched successfully
+        console.log("<< MENSAGEM DE RETORNO - fetchActiveUsers >>\n");
+        console.log("Dados :" + JSON.stringify(userData));
+        setUserList(userData);
       } 
     } catch (error) {
       console.log(error);
@@ -56,8 +55,8 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    fetchUserList();
-  }, [fetchUserList]); 
+    fetchActiveUsers();
+  }, [fetchActiveUsers]); 
 
   return (
     <React.Suspense fallback="...is loading">

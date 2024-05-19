@@ -23,10 +23,14 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
+import { Formik } from 'formik';
+  //TODO: Add Yup external component to form field validation
 
 // In-house components
 import UserAvatar from '../../components/user-avatar';
+
+// API
+import { getRequest, postRequest } from '../../data/requests';
 
 // Icons
 import CloseIcon from '@mui/icons-material/Close';
@@ -146,6 +150,33 @@ const Profile = (props) =>  {
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [editFields, setEditFields] = React.useState(false);
+  const [userData, setUserData] = React.useState();
+
+  const formikRef = React.useRef();
+
+  // ---------------------------------------------------------
+  // Function to fetch users list
+  const fetchUserDetails = React.useCallback(async function fetchUserDetails(userID) {
+    const payload = {
+      id: userID,
+    }
+    try {
+      const userData = await postRequest('/users/details',payload);
+      // If succeeded ...
+      if (userData) {
+        console.log("<< MENSAGEM DE RETORNO  - fetchUserDetails >>\n");
+        console.log("Dados :" + JSON.stringify(userData));
+        setUserData(userData);
+      } 
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const handleChangeValues = () => {
+    // TODO: Add code to handle change of values in Profile User data form
+    // This will allow the user to change and see the values changed
+  };
 
   // Function toggles the visibility of the password
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -159,9 +190,14 @@ const Profile = (props) =>  {
 
   // Function toggles the edit of profile fields
   const handleClickEdit = () => setEditFields((edit) => !edit);
-
-  console.log(props.userData);
-  if (props.tabExpanded === 'Profile') {
+  // ----------------------------------
+    // After rendering and after every update
+  React.useEffect(() => {
+    console.log("This is a useEffect execution on Fullscreen Modal Dialog");
+    fetchUserDetails(props.userData.id); //TODO: refactor - instead of all user data, pass just the user id as props
+  }, []);
+  
+  if (props.tabExpanded === 'Profile' && userData) {
     return (
           <Grid container spacing={2} height={'93vh'} p={3}>
             <Grid item md={4} flex={1}>
@@ -195,147 +231,159 @@ const Profile = (props) =>  {
                     </IconButton>
                   </Typography>
                 </Stack>
-                <Grid container spacing={2} p={1}>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      disabled={!editFields}
-                      fullWidth
-                      variant='outlined'
-                      label="First Names">
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      disabled={!editFields}
-                      fullWidth
-                      variant='outlined'
-                      label="Last Names">
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      disabled={!editFields}
-                      fullWidth
-                      variant='outlined'
-                      label="Birth Date">
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      disabled={!editFields}
-                      fullWidth
-                      variant='outlined'
-                      label="Prefix">
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <TextField
-                      disabled={!editFields}
-                      fullWidth
-                      variant='outlined'
-                      label="Phone Number">
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      disabled={!editFields}
-                      fullWidth
-                      variant='outlined'
-                      label="Address">
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={5}>
-                    <TextField
-                      disabled={!editFields}
-                      fullWidth
-                      variant='outlined'
-                      label="Zip-Code">
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={7}>
-                    <TextField
-                      disabled={!editFields}
-                      fullWidth
-                      variant='outlined'
-                      label="City">
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl 
-                      disabled={!editFields}
-                      fullWidth
-                      variant="outlined">
-                      <InputLabel variant='outlined'>Current Password</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-current-password"
-                        label="Current Password"
-                        type={showPassword ? 'text' : 'password'}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                          }
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl 
-                      disabled={!editFields}
-                      fullWidth
-                      variant="outlined">
-                      <InputLabel variant='outlined'>New Password</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-new-password"
-                        label="New Password"
-                        type={showPassword ? 'text' : 'password'}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                          }
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl 
-                      disabled={!editFields}
-                      fullWidth
-                      variant="outlined">
-                      <InputLabel variant='outlined'>Confirm New Password</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-conf-new-password"
-                        label="Confirm New Password"
-                        type={showPassword ? 'text' : 'password'}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                          }
-                      />
-                    </FormControl>
-                  </Grid>
-                </Grid> 
+                <Formik 
+                  enableReinitialize={true}
+                  initialValues={userData}
+                  innerRef={formikRef}>
+                  {({values, errors, touched, handleBlur, handleChange, handleSubmit}) => ( 
+                  <form style={{width: '100%'}}>
+                    <Grid container spacing={2} p={1}>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          type='text'
+                          label="First Names"
+                          value={values.first_names}>
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          label="Last Names"
+                          value={values.last_names}>
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          label="Birth Date">
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <TextField
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          label="Prefix">
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={8}>
+                        <TextField
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          label="Phone Number">
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          label="Address">
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={5}>
+                        <TextField
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          label="Zip-Code">
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={7}>
+                        <TextField
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          label="City">
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControl 
+                          disabled={!editFields}
+                          fullWidth
+                          variant="outlined">
+                          <InputLabel variant='outlined'>Current Password</InputLabel>
+                          <OutlinedInput
+                            id="outlined-adornment-current-password"
+                            label="Current Password"
+                            type={showPassword ? 'text' : 'password'}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                >
+                                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                              </InputAdornment>
+                              }
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControl 
+                          disabled={!editFields}
+                          fullWidth
+                          variant="outlined">
+                          <InputLabel variant='outlined'>New Password</InputLabel>
+                          <OutlinedInput
+                            id="outlined-adornment-new-password"
+                            label="New Password"
+                            type={showPassword ? 'text' : 'password'}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                >
+                                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                              </InputAdornment>
+                              }
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControl 
+                          disabled={!editFields}
+                          fullWidth
+                          variant="outlined">
+                          <InputLabel variant='outlined'>Confirm New Password</InputLabel>
+                          <OutlinedInput
+                            id="outlined-adornment-conf-new-password"
+                            label="Confirm New Password"
+                            type={showPassword ? 'text' : 'password'}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                >
+                                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                              </InputAdornment>
+                              }
+                          />
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </form>
+                  )}
+                </Formik>
                 {/* About me section */}
                 <Divider style={{margin: '0.5rem', width:'95%'}}/>
                 <Typography variant="h7" color="text.primary" component="div">
