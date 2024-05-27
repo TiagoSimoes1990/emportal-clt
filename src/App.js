@@ -73,7 +73,7 @@ function App() {
                     userPhoto = {user.photo? user.photo : dummyUserProfile}
                     firstName = {user.first_names}
                     lastName = {user.last_names}
-                    position = {user.category_id}
+                    position = {user.category_name}
                     email = {user.email}
                     phoneNumber = {user.phone_number}
                     onCardClick = {handleUserCardClick}

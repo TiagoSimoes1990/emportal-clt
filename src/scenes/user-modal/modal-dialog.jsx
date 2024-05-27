@@ -16,15 +16,15 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Stack from '@mui/material/Stack';
-import { Formik } from 'formik';
-  //TODO: Add Yup external component to form field validation
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup'
+import { DatePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 // In-house components
 import UserAvatar from '../../components/user-avatar';
@@ -42,6 +42,8 @@ import EditOffIcon from '@mui/icons-material/EditOff';
 // Images imports
 import dummyUserProfile from '../../images/dummy-profile-pic-300x300-1.png'
 
+import 'react-phone-number-input/style.css'
+
 // Style Objects
 const centerDivColDir = {
   display: "flex", 
@@ -55,6 +57,22 @@ const centerDivColDir = {
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+// TODO: Add more field to validation
+// Yup validation schema
+const validationSchema = Yup.object({
+  first_names: Yup.string().required('First name is required'),
+  last_names: Yup.string().required('Last name is required'),
+  birth_date: Yup.date()
+  .required('Birth date is required')
+  .max(new Date(), 'Birth date cannot be in the future'),
+  newPassword: Yup.string()
+  .required('New password is required')
+  .min(8, 'Password must be at least 8 characters long'),
+confirmNewPassword: Yup.string()
+  .required('Please confirm your new password')
+  .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
+})
 
 export default function ModalDialog(props) {
 
@@ -190,8 +208,21 @@ const Profile = (props) =>  {
 
   // Function toggles the edit of profile fields
   const handleClickEdit = () => setEditFields((edit) => !edit);
+
+  // Function to handle Formik submit
+  const handleSubmit = async (values) => {
+    try {
+      // Send the updated profile data to your backend API for updating
+      // Example: await axios.put('/api/user/profile', values);
+      console.log('Profile updated:', values);
+    } catch (error) {
+      // Handle errors, show error messages, etc.
+      console.error('Error updating profile:', error);
+    }
+  };
+
   // ----------------------------------
-    // After rendering and after every update
+  // After rendering and after every update
   React.useEffect(() => {
     console.log("This is a useEffect execution on Fullscreen Modal Dialog");
     fetchUserDetails(props.userData.id); //TODO: refactor - instead of all user data, pass just the user id as props
@@ -207,7 +238,7 @@ const Profile = (props) =>  {
                   src={props.userData.photo? props.userData.photo : dummyUserProfile}>
                 </UserAvatar>
                 <Typography gutterBottom variant="h7" component="div">
-                  {props.userData.category_id}
+                  {props.userData.category_name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" style={{ display: 'flex', flexDirection: 'row'}}>
                   <EmailIcon/>{props.userData.email}
@@ -234,164 +265,204 @@ const Profile = (props) =>  {
                 <Formik 
                   enableReinitialize={true}
                   initialValues={userData}
+                  validationSchema={validationSchema}
                   innerRef={formikRef}>
                   {({values, errors, touched, handleBlur, handleChange, handleSubmit}) => ( 
                   <form style={{width: '100%'}}>
                     <Grid container spacing={2} p={1}>
                       <Grid item xs={12} md={6}>
-                        <TextField
+                        <Field
+                          as={TextField}
                           disabled={!editFields}
                           fullWidth
                           variant='outlined'
                           type='text'
-                          label="First Names"
-                          value={values.first_names}>
-                        </TextField>
+                          label='First Names'
+                          name='first_names'
+                          value={values.first_names}
+                          onChange={handleChange}
+                          onBlut={handleBlur}>
+                        </Field>
+                        <ErrorMessage name='first_names' component='div'/>
                       </Grid>
                       <Grid item xs={12} md={6}>
-                        <TextField
+                        <Field
+                          as={TextField}
                           disabled={!editFields}
                           fullWidth
                           variant='outlined'
+                          type='text'
                           label="Last Names"
-                          value={values.last_names}>
-                        </TextField>
+                          name="last_names"
+                          onChange={handleChange}
+                          onBlur={handleBlur}>
+                        </Field>
+                        <ErrorMessage name='last_names' component='div'/>
                       </Grid>
                       <Grid item xs={12}>
-                        <TextField
-                          disabled={!editFields}
-                          fullWidth
-                          variant='outlined'
-                          label="Birth Date">
-                        </TextField>
+                        <LocalizationProvider 
+                          dateAdapter={AdapterDayjs}>
+                            <Field name ='birth_date'>
+                              {({field, form}) => (
+                                <DatePicker
+                                  {...field}
+                                  disabled={!editFields}
+                                  label='Birth Date'
+                                  renderInput={
+                                      (params) => <TextField {...params} fullWidth variant='outlined'></TextField>
+                                    }
+                                    onChange={(date) => {
+                                      form.setFieldValue('birth_date', date);
+                                      console.log(form);
+                                    }}
+                                  value={field.value ? new Date(field.value) : null}>
+                                </DatePicker>
+                              )}
+                            </Field>
+                        </LocalizationProvider>
+                        <ErrorMessage name='birth_date' component='div'></ErrorMessage> 
                       </Grid>
                       <Grid item xs={4}>
-                        <TextField
+                        <Field
+                          as={TextField}
                           disabled={!editFields}
                           fullWidth
                           variant='outlined'
-                          label="Prefix">
-                        </TextField>
+                          type='text'
+                          label="Prefix"
+                          name="prefix_phone_number">
+                        </Field>
                       </Grid>
                       <Grid item xs={8}>
-                        <TextField
+                        <Field
+                          as={TextField}
                           disabled={!editFields}
                           fullWidth
                           variant='outlined'
-                          label="Phone Number">
-                        </TextField>
+                          type='text'
+                          label="Phone Number"
+                          name="phone_number">
+                        </Field>
                       </Grid>
                       <Grid item xs={12}>
-                        <TextField
+                        <Field
+                          as={TextField}
                           disabled={!editFields}
                           fullWidth
                           variant='outlined'
-                          label="Address">
-                        </TextField>
+                          type='text'
+                          label="Address"
+                          name='address'>
+                        </Field>
                       </Grid>
                       <Grid item xs={5}>
-                        <TextField
+                        <Field
+                          as={TextField}
                           disabled={!editFields}
                           fullWidth
                           variant='outlined'
-                          label="Zip-Code">
-                        </TextField>
+                          type='text'
+                          label="Zip-Code"
+                          name='zipcode'>
+                        </Field>
                       </Grid>
                       <Grid item xs={7}>
-                        <TextField
+                        <Field
+                          as={TextField}
                           disabled={!editFields}
                           fullWidth
                           variant='outlined'
-                          label="City">
-                        </TextField>
+                          type='text'
+                          label="City"
+                          name='city'>
+                        </Field>
                       </Grid>
                       <Grid item xs={12}>
-                        <FormControl 
-                          disabled={!editFields}
-                          fullWidth
-                          variant="outlined">
-                          <InputLabel variant='outlined'>Current Password</InputLabel>
-                          <OutlinedInput
-                            id="outlined-adornment-current-password"
-                            label="Current Password"
-                            type={showPassword ? 'text' : 'password'}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <IconButton
-                                  aria-label="toggle password visibility"
-                                  onClick={handleClickShowPassword}
-                                  onMouseDown={handleMouseDownPassword}
-                                  edge="end"
-                                >
-                                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                              </InputAdornment>
-                              }
-                          />
-                        </FormControl>
+                        <Field name='newPassword'>
+                          {({field, form}) => (
+                            <TextField
+                              {...field}
+                              disabled={!editFields}
+                              fullWidth
+                              variant='outlined'
+                              label='New Password'
+                              type={showPassword ? 'text' : 'password'}
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment
+                                  position='end'>
+                                    <IconButton
+                                      aria-label='toggle password visibility'
+                                      onClick={handleClickShowPassword}
+                                      onMouseDown={handleMouseDownPassword}
+                                      edge='end'>
+                                        {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                    </IconButton> 
+                                  </InputAdornment>
+                              ),
+                            }}
+                            error={form.touched.confirmPassword && Boolean(form.errors.confirmPassword)} // Show error if touched
+                            helperText={form.touched.confirmPassword && form.errors.confirmPassword}
+                            >
+                          </TextField>
+                          )}
+                        </Field>
                       </Grid>
                       <Grid item xs={12}>
-                        <FormControl 
-                          disabled={!editFields}
-                          fullWidth
-                          variant="outlined">
-                          <InputLabel variant='outlined'>New Password</InputLabel>
-                          <OutlinedInput
-                            id="outlined-adornment-new-password"
-                            label="New Password"
-                            type={showPassword ? 'text' : 'password'}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <IconButton
-                                  aria-label="toggle password visibility"
-                                  onClick={handleClickShowPassword}
-                                  onMouseDown={handleMouseDownPassword}
-                                  edge="end"
-                                >
-                                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                              </InputAdornment>
-                              }
-                          />
-                        </FormControl>
+                        <Field name='confirmNewPassword'>
+                          {({field, form}) => (
+                            <TextField
+                              {...field}
+                              disabled={!editFields}
+                              fullWidth
+                              variant='outlined'
+                              label='Confirm New Password'
+                              type={showPassword ? 'text' : 'password'}
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment
+                                  position='end'>
+                                    <IconButton
+                                      aria-label='toggle password visibility'
+                                      onClick={handleClickShowPassword}
+                                      onMouseDown={handleMouseDownPassword}
+                                      edge='end'>
+                                        {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                    </IconButton> 
+                                  </InputAdornment>
+                              ),
+                            }}
+                            error={form.touched.confirmPassword && Boolean(form.errors.confirmPassword)} // Show error if touched
+                            helperText={form.touched.confirmPassword && form.errors.confirmPassword}
+                            >
+                          </TextField>
+                          )}
+                        </Field>
                       </Grid>
-                      <Grid item xs={12}>
-                        <FormControl 
-                          disabled={!editFields}
-                          fullWidth
-                          variant="outlined">
-                          <InputLabel variant='outlined'>Confirm New Password</InputLabel>
-                          <OutlinedInput
-                            id="outlined-adornment-conf-new-password"
-                            label="Confirm New Password"
-                            type={showPassword ? 'text' : 'password'}
-                            endAdornment={
-                              <InputAdornment position="end">
-                                <IconButton
-                                  aria-label="toggle password visibility"
-                                  onClick={handleClickShowPassword}
-                                  onMouseDown={handleMouseDownPassword}
-                                  edge="end"
-                                >
-                                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                              </InputAdornment>
-                              }
-                          />
-                        </FormControl>
+                      {/* About me section */}
+                      <Grid item xs={12} display={'flex'} flexDirection={'column'} alignItems={'center'}>
+                        <Divider style={{margin: '0.5rem', width:'100%'}}/>
+                          <Typography 
+                            variant="h7" 
+                            color="text.primary" 
+                            component="div">
+                            About Me
+                          </Typography>
+                          <Field
+                            as={TextField}
+                            disabled={!editFields}
+                            fullWidth
+                            variant='outlined'
+                            type='text'
+                            name='aboutme'
+                            multiline
+                            rows={4}>
+                          </Field>
                       </Grid>
                     </Grid>
                   </form>
                   )}
                 </Formik>
-                {/* About me section */}
-                <Divider style={{margin: '0.5rem', width:'95%'}}/>
-                <Typography variant="h7" color="text.primary" component="div">
-                  About Me
-                </Typography>
-                <Typography variant="body2" color="text.secondary" m="1rem">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit dolore, a hic deleniti quisquam blanditiis modi maiores numquam corrupti ea ipsum possimus, animi doloribus eum quas? Hic dignissimos eligendi cupiditate!
-                </Typography>
               </Paper>
             </Grid>
             <Grid item container spacing={2} md={8}>
