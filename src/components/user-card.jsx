@@ -3,6 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
+import '../styles/user-card.css';
 
 const userImg = {
   borderRadius: "50%",
@@ -13,7 +14,7 @@ const userImg = {
 
 function UserCard(props) {
   return (
-    <Card style={userImg} sx={{minWidth: 250, maxWidth: 275, m:1 }}>
+    <Card className='user-card' sx={{minWidth: 250, maxWidth: 275, m:1 }}>
       <CardActionArea
         onClick={ () => {
           props.onCardClick (props.id)

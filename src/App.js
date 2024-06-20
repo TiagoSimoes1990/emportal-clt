@@ -43,7 +43,7 @@ function App() {
   // Function to fetch users list
   const fetchActiveUsers = React.useCallback(async function fetchActiveUsers() {
     try {
-      const userData = await getRequest('/users/active');
+      const userData = await getRequest('/users/list-active');
       if (userData) { // Check if data was fetched successfully
         console.log("<< MENSAGEM DE RETORNO - fetchActiveUsers >>\n");
         console.log("Dados :" + JSON.stringify(userData));
