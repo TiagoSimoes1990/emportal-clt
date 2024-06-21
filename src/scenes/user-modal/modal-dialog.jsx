@@ -175,11 +175,11 @@ const Profile = (props) =>  {
   // ---------------------------------------------------------
   // Function to fetch users list
   const fetchUserDetails = React.useCallback(async function fetchUserDetails(userID) {
-    const payload = {
-      id: userID,
-    }
+    // const payload = {
+    //   id: userID,
+    // }
     try {
-      const userData = await postRequest('/users/details',payload);
+      const userData = await getRequest(`/users/details/${userID}`);
       // If succeeded ...
       if (userData) {
         console.log("<< MENSAGEM DE RETORNO  - fetchUserDetails >>\n");
