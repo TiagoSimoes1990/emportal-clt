@@ -25,12 +25,13 @@ import * as Yup from 'yup'
 import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 // In-house components
 import UserAvatar from '../../components/user-avatar';
 
 // API
-import { getRequest, postRequest } from '../../data/requests';
+import { getRequest, postRequest, patchRequest } from '../../data/requests';
 
 // Icons
 import CloseIcon from '@mui/icons-material/Close';
@@ -52,6 +53,9 @@ const centerDivColDir = {
   backgroundColor: "#F9F7F7",
   height: "100%",
 }
+
+// Create a FormikContext
+const FormikSubmitContext = React.createContext(null);
 
 // Transitions
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -76,12 +80,24 @@ confirmNewPassword: Yup.string()
 
 export default function ModalDialog(props) {
 
+  // useState Hooks
   const [tabIsOpen, setTabIsOpen] = React.useState('Profile');
+
+  // References
+  const formikRef = React.useRef(null);
 
   // Function to handle de event of closing the modal
   const handleCloseModal = () => {
     props.onClose();
     setTabIsOpen('Profile');
+  }
+
+  // Function to handle the click on save button
+  // TODO: Disable save button if there are no changes to the form values
+  const handleClickSave = () => {
+    console.log("handleClickSave -> Submit form");
+    formikRef.current?.submitForm();
+    console.log(formikRef.current?.errors);
   }
 
   // Hook for debugging
@@ -93,71 +109,73 @@ export default function ModalDialog(props) {
   });
 
   return (
-    <Dialog
-        fullScreen
-        open={props.expanded}
-        onClose={handleCloseModal}
-        TransitionComponent={Transition}
-      >
-          <AppBar>
-            <Toolbar>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={handleCloseModal}
-                aria-label="close"
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                {props.userData.first_names + ' ' + props.userData.last_names}
-              </Typography>
-              <Button 
-                autoFocus color="inherit" 
-                onClick={handleCloseModal}
+    <FormikSubmitContext.Provider value={formikRef}>
+      <Dialog
+          fullScreen
+          open={props.expanded}
+          onClose={handleCloseModal}
+          TransitionComponent={Transition}
+        >
+            <AppBar>
+              <Toolbar>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleCloseModal}
+                  aria-label="close"
                 >
-                save
-              </Button>
-            </Toolbar>
-          </AppBar>
-            <Grid container spacing={2} mt={7}>
-              <Grid item xs={2}>
-                  <ListItemButton
-                    onClick={ () => {
-                      setTabIsOpen('Profile');
-                    }}>
-                      <ListItemText primary="Profile"/>
-                  </ListItemButton>
-                  <Divider />
-                  <ListItemButton
-                    onClick={ () => {
-                      setTabIsOpen('Absences');
-                    }}>
-                      <ListItemText primary="Absences"/>
-                  </ListItemButton>
-                  <Divider />
-                  <ListItemButton
-                    onClick={ () => {
-                      setTabIsOpen('Timesheet');
-                    }}>
-                      <ListItemText primary="Timesheet"/>
-                  </ListItemButton>
-                  <Divider />
+                  <CloseIcon />
+                </IconButton>
+                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                  {props.userData.first_names + ' ' + props.userData.last_names}
+                </Typography>
+                <Button 
+                  autoFocus color="inherit" 
+                  onClick={handleClickSave}
+                  >
+                  Save
+                </Button>
+              </Toolbar>
+            </AppBar>
+              <Grid container spacing={2} mt={7}>
+                <Grid item xs={2}>
+                    <ListItemButton
+                      onClick={ () => {
+                        setTabIsOpen('Profile');
+                      }}>
+                        <ListItemText primary="Profile"/>
+                    </ListItemButton>
+                    <Divider />
+                    <ListItemButton
+                      onClick={ () => {
+                        setTabIsOpen('Absences');
+                      }}>
+                        <ListItemText primary="Absences"/>
+                    </ListItemButton>
+                    <Divider />
+                    <ListItemButton
+                      onClick={ () => {
+                        setTabIsOpen('Timesheet');
+                      }}>
+                        <ListItemText primary="Timesheet"/>
+                    </ListItemButton>
+                    <Divider />
+                </Grid>
+                <Grid item xs={10} >
+                  <Profile
+                    tabExpanded = {tabIsOpen} 
+                    userData = {props.userData}>
+                  </Profile>
+                  <Absences
+                    tabExpanded = {tabIsOpen} >
+                  </Absences>
+                  <Timesheet
+                    tabExpanded = {tabIsOpen} >
+                  </Timesheet>
+                </Grid>
               </Grid>
-              <Grid item xs={10} >
-                <Profile
-                  tabExpanded = {tabIsOpen} 
-                  userData = {props.userData}>
-                </Profile>
-                <Absences
-                  tabExpanded = {tabIsOpen} >
-                </Absences>
-                <Timesheet
-                  tabExpanded = {tabIsOpen} >
-                </Timesheet>
-              </Grid>
-            </Grid>
       </Dialog>
+    </FormikSubmitContext.Provider>
   );
 }
 
@@ -170,14 +188,27 @@ const Profile = (props) =>  {
   const [editFields, setEditFields] = React.useState(false);
   const [userData, setUserData] = React.useState();
 
-  const formikRef = React.useRef();
+  const formikSubmitRef = React.useContext(FormikSubmitContext);
+
+
+  // 
+  // Function to request the update of user details on database
+  const updateUserDetails = React.useCallback(async function updateUserDetails(newData) {
+    console.log("Update User Details was Triggered!!!");
+    console.log("Data to be updated");
+    const userId = newData.id;
+    console.log(newData);
+    console.log(userId);
+    try {
+      const userUpdated = await patchRequest(`/users/update/${userId}`, newData);
+    } catch (error) {
+      console.log(error);
+    }
+  })
 
   // ---------------------------------------------------------
-  // Function to fetch users list
+  // Function to fetch user details
   const fetchUserDetails = React.useCallback(async function fetchUserDetails(userID) {
-    // const payload = {
-    //   id: userID,
-    // }
     try {
       const userData = await getRequest(`/users/details/${userID}`);
       // If succeeded ...
@@ -190,11 +221,6 @@ const Profile = (props) =>  {
       console.log(error);
     }
   }, []);
-
-  const handleChangeValues = () => {
-    // TODO: Add code to handle change of values in Profile User data form
-    // This will allow the user to change and see the values changed
-  };
 
   // Function toggles the visibility of the password
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -212,14 +238,44 @@ const Profile = (props) =>  {
   // Function to handle Formik submit
   const handleSubmit = async (values) => {
     try {
-      // Send the updated profile data to your backend API for updating
-      // Example: await axios.put('/api/user/profile', values);
       console.log('Profile updated:', values);
+      const finalUserData = await transformUserData(values);
+      console.log("FINAL USER DATA TO SAVE ON DATABASE:");
+      console.log(finalUserData);
+      console.log(finalUserData.birth_date);
+      // TODO: Function to get the fields that were edited
+      updateUserDetails(finalUserData);
     } catch (error) {
       // Handle errors, show error messages, etc.
       console.error('Error updating profile:', error);
     }
   };
+
+  // Function to transform user data according to database
+  const transformUserData = async (userData) => {
+
+    return({
+      "id": userData.id,
+      "first_names": userData.first_names,
+      "last_names": userData.last_names,
+      "birth_date":  dayjs(userData.birth_date.$d).format('DD/MM/YYYY'),
+      "phone_number":userData.phone_number,
+      "prefix_phone_number": userData.prefix_phone_number,
+      "address": userData.address,
+      "zipcode": userData.zipcode,
+      "city": userData.city,
+      "passwd": userData.newPassword,
+      "aboutme": userData.aboutme,
+      "username": userData.username,
+      "email": userData.email,
+      "active": userData.active,
+      "photo": userData.photo,
+      "profile_id": userData.profile_id,
+      "language_id": userData.language_id,
+      "employe_number": userData.employe_number,
+        })
+
+  }
 
   // ----------------------------------
   // After rendering and after every update
@@ -266,9 +322,11 @@ const Profile = (props) =>  {
                   enableReinitialize={true}
                   initialValues={userData}
                   validationSchema={validationSchema}
-                  innerRef={formikRef}>
-                  {({values, errors, touched, handleBlur, handleChange, handleSubmit}) => ( 
-                  <form style={{width: '100%'}}>
+                  innerRef={formikSubmitRef}
+                  onSubmit={handleSubmit}
+                >
+                  {({errors, touched}) => ( 
+                  <Form style={{width: '100%'}}>
                     <Grid container spacing={2} p={1}>
                       <Grid item xs={12} md={6}>
                         <Field
@@ -279,9 +337,9 @@ const Profile = (props) =>  {
                           type='text'
                           label='First Names'
                           name='first_names'
-                          value={values.first_names}
-                          onChange={handleChange}
-                          onBlut={handleBlur}>
+                          error={touched.first_names && Boolean(errors.first_names)}
+                          helperText={touched.first_names && errors.first_names}
+                        >
                         </Field>
                         <ErrorMessage name='first_names' component='div'/>
                       </Grid>
@@ -294,18 +352,24 @@ const Profile = (props) =>  {
                           type='text'
                           label="Last Names"
                           name="last_names"
-                          onChange={handleChange}
-                          onBlur={handleBlur}>
+                          error={touched.last_names && Boolean(errors.last_names)}
+                          helperText={touched.last_names && errors.last_names}
+                        >
                         </Field>
                         <ErrorMessage name='last_names' component='div'/>
                       </Grid>
                       <Grid item xs={12}>
                         <LocalizationProvider 
                           dateAdapter={AdapterDayjs}>
-                            <Field name ='birth_date'>
+                            <Field 
+                              name ='birth_date'
+                              error={touched.birth_date && Boolean(errors.birth_date)}
+                              helperText={touched.birth_date && errors.birth_date}
+                              >
                               {({field, form}) => (
                                 <DatePicker
                                   {...field}
+                                  format="DD/MM/YYYY"
                                   disabled={!editFields}
                                   label='Birth Date'
                                   renderInput={
@@ -315,7 +379,10 @@ const Profile = (props) =>  {
                                       form.setFieldValue('birth_date', date);
                                       console.log(form);
                                     }}
-                                  value={field.value ? new Date(field.value) : null}>
+                                  value={field.value ? dayjs(field.value) : null}
+                                  onError={(error) => {
+                                    form.setFieldError('birth_date', 'Invalid date format');
+                                  }}>
                                 </DatePicker>
                               )}
                             </Field>
@@ -330,8 +397,12 @@ const Profile = (props) =>  {
                           variant='outlined'
                           type='text'
                           label="Prefix"
-                          name="prefix_phone_number">
+                          name="prefix_phone_number"
+                          error={touched.prefix_phone_number && Boolean(errors.prefix_phone_number)}
+                          helperText={touched.prefix_phone_number && errors.prefix_phone_number}
+                          >
                         </Field>
+                        <ErrorMessage name='prefix_phone_number' component='div'></ErrorMessage>
                       </Grid>
                       <Grid item xs={8}>
                         <Field
@@ -341,8 +412,12 @@ const Profile = (props) =>  {
                           variant='outlined'
                           type='text'
                           label="Phone Number"
-                          name="phone_number">
+                          name="phone_number"
+                          error={touched.phone_number && Boolean(errors.phone_number)}
+                          helperText={touched.phone_number && errors.phone_number}
+                        >
                         </Field>
+                        <ErrorMessage name='phone_number' component='div'></ErrorMessage>
                       </Grid>
                       <Grid item xs={12}>
                         <Field
@@ -352,8 +427,12 @@ const Profile = (props) =>  {
                           variant='outlined'
                           type='text'
                           label="Address"
-                          name='address'>
+                          name='address'
+                          error={touched.address && Boolean(errors.address)}
+                          helperText={touched.address && errors.address}
+                        >
                         </Field>
+                        <ErrorMessage name='address' component='div'></ErrorMessage>
                       </Grid>
                       <Grid item xs={5}>
                         <Field
@@ -363,8 +442,12 @@ const Profile = (props) =>  {
                           variant='outlined'
                           type='text'
                           label="Zip-Code"
-                          name='zipcode'>
+                          name='zipcode'
+                          error={touched.zipcode && Boolean(errors.zipcode)}
+                          helperText={touched.zipcode && errors.zipcode}
+                        >
                         </Field>
+                        <ErrorMessage name='zipcode' component='div'></ErrorMessage>
                       </Grid>
                       <Grid item xs={7}>
                         <Field
@@ -374,11 +457,19 @@ const Profile = (props) =>  {
                           variant='outlined'
                           type='text'
                           label="City"
-                          name='city'>
+                          name='city'
+                          error={touched.city && Boolean(errors.city)}
+                          helperText={touched.city && errors.city}
+                          >
                         </Field>
+                        <ErrorMessage name='city' component='div'></ErrorMessage>
                       </Grid>
                       <Grid item xs={12}>
-                        <Field name='newPassword'>
+                        <Field 
+                          name='newPassword'
+                          error={touched.newPassword && Boolean(errors.newPassword)}
+                          helperText={touched.newPassword && errors.newPassword}
+                        >
                           {({field, form}) => (
                             <TextField
                               {...field}
@@ -407,9 +498,14 @@ const Profile = (props) =>  {
                           </TextField>
                           )}
                         </Field>
+                        <ErrorMessage name='newPassword' component='div'></ErrorMessage>
                       </Grid>
                       <Grid item xs={12}>
-                        <Field name='confirmNewPassword'>
+                        <Field 
+                          name='confirmNewPassword'
+                          error={touched.confirmNewPassword && Boolean(errors.confirmNewPassword)}
+                          helperText={touched.confirmNewPassword && errors.confirmNewPassword}
+                        >
                           {({field, form}) => (
                             <TextField
                               {...field}
@@ -438,6 +534,7 @@ const Profile = (props) =>  {
                           </TextField>
                           )}
                         </Field>
+                        <ErrorMessage name='confirmNewPassword' component='div'></ErrorMessage>
                       </Grid>
                       {/* About me section */}
                       <Grid item xs={12} display={'flex'} flexDirection={'column'} alignItems={'center'}>
@@ -455,12 +552,16 @@ const Profile = (props) =>  {
                             variant='outlined'
                             type='text'
                             name='aboutme'
+                            error={touched.aboutme && Boolean(errors.aboutme)}
+                            helperText={touched.aboutme && errors.aboutme}
                             multiline
-                            rows={4}>
+                            rows={4}
+                          >
                           </Field>
+                          <ErrorMessage name='aboutme' component='div'></ErrorMessage>
                       </Grid>
                     </Grid>
-                  </form>
+                  </Form>
                   )}
                 </Formik>
               </Paper>
