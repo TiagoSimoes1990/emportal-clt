@@ -102,11 +102,10 @@ export default function ModalDialog(props) {
 
   // Hook for debugging
   React.useEffect(() => {
+    console.log("COna");
     console.log(props.expanded);
-    console.log(tabIsOpen);
-    console.log(props.userData.first_names);
-    console.log(props.userData.photo);
-  });
+    console.log(props.userId);
+  }, []);
 
   return (
     <FormikSubmitContext.Provider value={formikRef}>
@@ -127,12 +126,12 @@ export default function ModalDialog(props) {
                   <CloseIcon />
                 </IconButton>
                 <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                  {props.userData.first_names + ' ' + props.userData.last_names}
+                  {/* {userData.first_names + ' ' + userData.last_names} */}
                 </Typography>
                 <Button 
                   autoFocus color="inherit" 
                   onClick={handleClickSave}
-                  >
+                >
                   Save
                 </Button>
               </Toolbar>
@@ -164,7 +163,7 @@ export default function ModalDialog(props) {
                 <Grid item xs={10} >
                   <Profile
                     tabExpanded = {tabIsOpen} 
-                    userData = {props.userData}>
+                    userId = {props.userId}>
                   </Profile>
                   <Absences
                     tabExpanded = {tabIsOpen} >
@@ -281,7 +280,7 @@ const Profile = (props) =>  {
   // After rendering and after every update
   React.useEffect(() => {
     console.log("This is a useEffect execution on Fullscreen Modal Dialog");
-    fetchUserDetails(props.userData.id); //TODO: refactor - instead of all user data, pass just the user id as props
+    fetchUserDetails(props.userId);
   }, []);
   
   if (props.tabExpanded === 'Profile' && userData) {
@@ -290,17 +289,20 @@ const Profile = (props) =>  {
             <Grid item md={4} flex={1}>
               <Paper elevation={3} style={centerDivColDir}>
                 <UserAvatar
-                  alt={props.userData.first_names}
-                  src={props.userData.photo? props.userData.photo : dummyUserProfile}>
+                  alt={userData.first_names}
+                  src={userData.photo? userData.photo : dummyUserProfile}>
                 </UserAvatar>
+                <Typography gutterBottom variant="h5" component="div">
+                  {userData.first_names + ' ' + userData.last_names}
+                </Typography>
                 <Typography gutterBottom variant="h7" component="div">
-                  {props.userData.category_name}
+                  {userData.category_name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" style={{ display: 'flex', flexDirection: 'row'}}>
-                  <EmailIcon/>{props.userData.email}
+                  <EmailIcon/>{userData.email}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" style={{ display: 'flex', flexDirection: 'row'}}>
-                  <SmartphoneIcon/>{props.userData.phone_number}
+                  <SmartphoneIcon/>{userData.phone_number}
                 </Typography>
                 {/* Personal Data section */}
                 <Divider style={{margin: '0.5rem', width:'95%'}}/>

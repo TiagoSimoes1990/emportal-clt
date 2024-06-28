@@ -24,15 +24,17 @@ function App() {
   const [theme, colorMode] = useMode();
 
   const [open, setOpen] = React.useState(false);
-  const [userID, setUserID] = React.useState();
+  const [userID, setUserID] = React.useState(null);
 
   const [userList, setUserList] = React.useState();
 
   const handleClose = () => {
+    setUserID(null)
     setOpen(false);
   };
 
   const handleUserCardClick = (id) => {
+    console.log("clicked card ID");
     console.log(id);
     // console.log(userData);
     setUserID(id);
@@ -85,7 +87,8 @@ function App() {
               <ModalDialog
                 expanded = {open}
                 onClose = {handleClose}
-                userData = {userList.find((user) => user.id === userID)}
+                // userId = {userList.find((user) => user.id === userID)?.id}
+                userId = {userID}
               >
               </ModalDialog>}
           </Box>
