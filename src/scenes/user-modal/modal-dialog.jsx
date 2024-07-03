@@ -192,10 +192,9 @@ const Profile = (props) =>  {
 
   // 
   // Function to request the update of user details on database
-  const updateUserDetails = React.useCallback(async function updateUserDetails(newData) {
+  const updateUserDetails = React.useCallback(async function updateUserDetails(newData, userId) {
     console.log("Update User Details was Triggered!!!");
     console.log("Data to be updated");
-    const userId = newData.id;
     console.log(newData);
     console.log(userId);
     try {
@@ -235,51 +234,54 @@ const Profile = (props) =>  {
   const handleClickEdit = () => setEditFields((edit) => !edit);
 
   // Function to handle Formik submit
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (currentValues, {setSubmitting}) => {
+    setSubmitting(true); //Disable submitting button
+
+    const changedValues = {};
+
+    // Compare initial and current values
+    for (const field in currentValues) {
+      if (currentValues[field] !== userData[field]) {
+        changedValues[field] = currentValues[field];
+      }
+    }
+    console.log('Initial form Values: ', userData);
+    console.log('Changed values:', changedValues); 
+
     try {
-      console.log('Profile updated:', values);
-      const finalUserData = await transformUserData(values);
+      // await new Promise(resolve => setTimeout(resolve, 5000)); // 5-second delay to test that the 'save button' is disabled
+      const finalUserData = await transformUserData(changedValues);
       console.log("FINAL USER DATA TO SAVE ON DATABASE:");
       console.log(finalUserData);
-      console.log(finalUserData.birth_date);
-      // TODO: Function to get the fields that were edited
-      updateUserDetails(finalUserData);
+      updateUserDetails(finalUserData,userData.id);
     } catch (error) {
       // Handle errors, show error messages, etc.
       console.error('Error updating profile:', error);
+    } finally {
+      setSubmitting(false); // Re-enables submitting button
     }
   };
 
   // Function to transform user data according to database
-  const transformUserData = async (userData) => {
-
-    return({
-      "id": userData.id,
-      "first_names": userData.first_names,
-      "last_names": userData.last_names,
-      "birth_date":  dayjs(userData.birth_date.$d).format('DD/MM/YYYY'),
-      "phone_number":userData.phone_number,
-      "prefix_phone_number": userData.prefix_phone_number,
-      "address": userData.address,
-      "zipcode": userData.zipcode,
-      "city": userData.city,
-      "passwd": userData.newPassword,
-      "aboutme": userData.aboutme,
-      "username": userData.username,
-      "email": userData.email,
-      "active": userData.active,
-      "photo": userData.photo,
-      "profile_id": userData.profile_id,
-      "language_id": userData.language_id,
-      "employe_number": userData.employe_number,
-        })
-
-  }
+  const transformUserData = async (data) => {
+    return Object.entries(data).reduce((transformed, [key, value]) => {
+      if (value !== undefined) { // Check if value exists
+        if (key === 'birth_date' && value.$d) {
+          transformed[key] = dayjs(value.$d).format('DD/MM/YYYY');
+        } else if (key === 'newPassword' || key === 'confirmNewPassword') {
+          transformed['passwd'] = value;
+        } else {
+          transformed[key] = value;
+        }
+      }
+      return transformed;
+    }, {});
+  };
 
   // ----------------------------------
   // After rendering and after every update
   React.useEffect(() => {
-    console.log("This is a useEffect execution on Fullscreen Modal Dialog");
+    console.log("useEffect execution on Fullscreen Modal Dialog render");
     fetchUserDetails(props.userId);
   }, []);
   
@@ -380,6 +382,7 @@ const Profile = (props) =>  {
                                     onChange={(date) => {
                                       form.setFieldValue('birth_date', date);
                                       console.log(form);
+                                      console.log(form.touched);
                                     }}
                                   value={field.value ? dayjs(field.value) : null}
                                   onError={(error) => {
