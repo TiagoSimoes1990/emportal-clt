@@ -71,10 +71,8 @@ const validationSchema = Yup.object({
   .required('Birth date is required')
   .max(new Date(), 'Birth date cannot be in the future'),
   newPassword: Yup.string()
-  .required('New password is required')
   .min(8, 'Password must be at least 8 characters long'),
 confirmNewPassword: Yup.string()
-  .required('Please confirm your new password')
   .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
 })
 
@@ -102,7 +100,7 @@ export default function ModalDialog(props) {
 
   // Hook for debugging
   React.useEffect(() => {
-    console.log("COna");
+    console.log("useEffect from 'Profile Tab'");
     console.log(props.expanded);
     console.log(props.userId);
   }, []);
