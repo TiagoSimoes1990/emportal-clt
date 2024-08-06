@@ -21,7 +21,7 @@ function UserCard(props) {
           alignItems="center"
           spacing={2}>
           <Avatar
-            alt='user photo'
+            alt={props.firstName}
             src={props.userPhoto}
             sx={{ width: 120, height: 120 }}
           />
