@@ -26,6 +26,8 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import Avatar from '@mui/material/Avatar';
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 // In-house components
 import UserAvatar from '../../components/user-avatar';
@@ -39,11 +41,13 @@ import EmailIcon from '@mui/icons-material/Email';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import EditIcon from '@mui/icons-material/Edit';
 import EditOffIcon from '@mui/icons-material/EditOff';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 // Images imports
 import dummyUserProfile from '../../images/dummy-profile-pic-300x300-1.png'
 
 import 'react-phone-number-input/style.css'
+import { UploadFile } from '@mui/icons-material';
 
 // Style Objects
 const centerDivColDir = {
@@ -184,6 +188,7 @@ const Profile = (props) =>  {
   const [showPassword, setShowPassword] = React.useState(false);
   const [editFields, setEditFields] = React.useState(false);
   const [userData, setUserData] = React.useState();
+  const [profilePhoto, setProfilePhoto] = React.useState();
 
   const formikSubmitRef = React.useContext(FormikSubmitContext);
 
@@ -201,6 +206,8 @@ const Profile = (props) =>  {
       console.log(error);
     }
   })
+
+
 
   // ---------------------------------------------------------
   // Function to fetch user details
@@ -244,14 +251,22 @@ const Profile = (props) =>  {
       }
     }
     console.log('Initial form Values: ', userData);
-    console.log('Changed values:', changedValues); 
+    console.log('Changed values:', changedValues);
 
     try {
       // await new Promise(resolve => setTimeout(resolve, 5000)); // 5-second delay to test that the 'save button' is disabled
       const finalUserData = await transformUserData(changedValues);
       console.log("FINAL USER DATA TO SAVE ON DATABASE:");
       console.log(finalUserData);
-      updateUserDetails(finalUserData,userData.id);
+
+      if (!(Object.keys(changedValues).length === 0)) {
+        updateUserDetails(finalUserData,userData.id);
+      }
+
+      if (profilePhoto) {
+        await updateUserPhoto(profilePhoto, userData.id);
+      }
+
     } catch (error) {
       // Handle errors, show error messages, etc.
       console.error('Error updating profile:', error);
@@ -275,6 +290,35 @@ const Profile = (props) =>  {
       return transformed;
     }, {});
   };
+
+  // ----------------------------------
+  // Handle Click on image change
+  const handleChangeProfilePhoto = async (event) => {
+    console.log("Change profile picture")
+    console.log(event.target);
+    console.log(event.target.files[0].name);
+
+    const formData = new FormData();
+    formData.append('image', event.currentTarget.files[0]);
+
+    setProfilePhoto(formData);
+  }
+ 
+  // ----------------------------------
+  // Handle Request to upload user profile photo
+  const updateUserPhoto = React.useCallback(async function updateUserPhoto(imageFormData, userID) {
+    console.log("updateUserPhoto was Triggered!!!");
+    console.log("Data to be updated");
+    console.log(imageFormData);
+    console.log(userID);
+    try {
+      const imageUpdated = await postRequest(`/users/photo/${userID}`, imageFormData, {'Content-Type': 'multipart/form-data'});
+      console.log("Request ended");
+      console.log(imageUpdated);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []); 
 
   // ----------------------------------
   // After rendering and after every update
@@ -327,9 +371,25 @@ const Profile = (props) =>  {
                   innerRef={formikSubmitRef}
                   onSubmit={handleSubmit}
                 >
-                  {({errors, touched}) => ( 
+                  {({errors, touched, setFieldValue, values }) => ( 
                   <Form style={{width: '100%'}}>
                     <Grid container spacing={2} p={1}>
+                      <Grid item xs={12}>
+                        <Button
+                          component='label'
+                          variant='outlined'
+                          startIcon={<UploadFileIcon/>}
+                          >
+                            Upload Image
+                            <input
+                              type='file'
+                              accept='.jpeg,.jpg'
+                              onChange={handleChangeProfilePhoto}
+                              >
+                            </input>  
+                          </Button>
+                        <ErrorMessage name='photo' component='div'/>
+                      </Grid>
                       <Grid item xs={12} md={6}>
                         <Field
                           as={TextField}

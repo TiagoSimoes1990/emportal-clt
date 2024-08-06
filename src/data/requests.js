@@ -16,7 +16,7 @@ const config = require('../utils/config');  // Load environment variables from .
 const axiosClient = axios.create();
 
 // Base URL from environment variable
-axiosClient.defaults.baseURL = process.env.API_BASE_URL || 'http://localhost:3000/api'; // Use a default if not set;
+axiosClient.defaults.baseURL = config.API_BASE_URL;
 // Default request timeout
 axiosClient.defaults.timeout = 6000;
 

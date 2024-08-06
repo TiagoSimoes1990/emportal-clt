@@ -1,5 +1,6 @@
 
 import React from "react";
+import base64js from 'base64-js';
 
 const userAvatarStyle = {
     borderRadius: "50%",

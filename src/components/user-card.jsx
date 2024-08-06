@@ -14,6 +14,7 @@ const userImg = {
 
 function UserCard(props) {
   return (
+    // <Card style={userImg} sx={{minWidth: 250, maxWidth: 275, m:1 }}>
     <Card className='user-card' sx={{minWidth: 250, maxWidth: 275, m:1 }}>
       <CardActionArea
         onClick={ () => {
