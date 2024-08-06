@@ -332,10 +332,11 @@ const Profile = (props) =>  {
           <Grid container spacing={2} height={'93vh'} p={3}>
             <Grid item md={4} flex={1}>
               <Paper elevation={3} style={centerDivColDir}>
-                <UserAvatar
+                <Avatar
                   alt={userData.first_names}
-                  src={userData.photo? userData.photo : dummyUserProfile}>
-                </UserAvatar>
+                  src={userData.photo? userData.photo : dummyUserProfile}
+                  sx={{ width: 120, height: 120 }}
+                />
                 <Typography gutterBottom variant="h5" component="div">
                   {userData.first_names + ' ' + userData.last_names}
                 </Typography>
