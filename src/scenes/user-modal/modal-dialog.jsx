@@ -440,6 +440,21 @@ const Profile = (props) =>  {
                         <ErrorMessage name='last_names' component='div'/>
                       </Grid>
                       <Grid item xs={12}>
+                        <Field
+                          as={TextField}
+                          disabled={!editFields}
+                          fullWidth
+                          variant='outlined'
+                          type='text'
+                          label="E-mail"
+                          name='email'
+                          error={touched.email && Boolean(errors.email)}
+                          helperText={touched.email && errors.email}
+                        >
+                        </Field>
+                        <ErrorMessage name='address' component='div'></ErrorMessage>
+                      </Grid>
+                      <Grid item xs={12}>
                         <LocalizationProvider 
                           dateAdapter={AdapterDayjs}>
                             <Field 
