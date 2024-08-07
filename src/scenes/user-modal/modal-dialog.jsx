@@ -27,7 +27,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import Avatar from '@mui/material/Avatar';
-import UploadFileIcon from "@mui/icons-material/UploadFile";
+import { styled } from '@mui/material/styles';
+import Badge from '@mui/material/Badge';
 
 // In-house components
 import UserAvatar from '../../components/user-avatar';
@@ -192,6 +193,17 @@ const Profile = (props) =>  {
 
   const formikSubmitRef = React.useContext(FormikSubmitContext);
 
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
 
   // 
   // Function to request the update of user details on database
@@ -332,11 +344,33 @@ const Profile = (props) =>  {
           <Grid container spacing={2} height={'93vh'} p={3}>
             <Grid item md={4} flex={1}>
               <Paper elevation={3} style={centerDivColDir}>
-                <Avatar
-                  alt={userData.first_names}
-                  src={userData.photo? userData.photo : dummyUserProfile}
-                  sx={{ width: 120, height: 120 }}
-                />
+                <Badge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  badgeContent={
+                    <IconButton
+                      disabled={!editFields}
+                      edge='end'
+                      component='label'
+                      role={undefined}
+                      variant='contained'
+                      tabIndex={-1}
+                    >
+                      <AddPhotoAlternateIcon/>
+                      <VisuallyHiddenInput 
+                        type='file'
+                        accept='.jpeg,.jpg'
+                        onChange={handleChangeProfilePhoto}
+                        />
+                    </IconButton>
+                  }
+                >
+                  <Avatar
+                    alt={userData.first_names}
+                    src={userData.photo? userData.photo : dummyUserProfile}
+                    sx={{ width: 120, height: 120 }}
+                  />
+                </Badge>
                 <Typography gutterBottom variant="h5" component="div">
                   {userData.first_names + ' ' + userData.last_names}
                 </Typography>
@@ -375,22 +409,6 @@ const Profile = (props) =>  {
                   {({errors, touched, setFieldValue, values }) => ( 
                   <Form style={{width: '100%'}}>
                     <Grid container spacing={2} p={1}>
-                      <Grid item xs={12}>
-                        <Button
-                          component='label'
-                          variant='outlined'
-                          startIcon={<UploadFileIcon/>}
-                          >
-                            Upload Image
-                            <input
-                              type='file'
-                              accept='.jpeg,.jpg'
-                              onChange={handleChangeProfilePhoto}
-                              >
-                            </input>  
-                          </Button>
-                        <ErrorMessage name='photo' component='div'/>
-                      </Grid>
                       <Grid item xs={12} md={6}>
                         <Field
                           as={TextField}
