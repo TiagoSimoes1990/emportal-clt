@@ -12,23 +12,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Stack from '@mui/material/Stack';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup'
-import { DatePicker } from '@mui/x-date-pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
-import Avatar from '@mui/material/Avatar';
-import { styled } from '@mui/material/styles';
-import Badge from '@mui/material/Badge';
 
 // In-house components
 import UserModalTabProfile from './user-modal-tab-profile';
@@ -36,7 +20,6 @@ import UserModalTabAbsences from './user-modal-tab-absences';
 import UserModalTabTimesheet from './user-modal-tab-timesheet';
 
 // API
-import { getRequest, postRequest, patchRequest } from '../../data/requests';
 
 // Icons
 import CloseIcon from '@mui/icons-material/Close';
