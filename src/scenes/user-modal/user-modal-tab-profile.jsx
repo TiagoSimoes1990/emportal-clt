@@ -86,7 +86,7 @@ const UserModalTabProfile = ({userId, tabExpanded, formikRef}) =>  {
       width: 1,
     });
   
-    // 
+    // ---------------------------------------------------------
     // Function to request the update of user details on database
     const updateUserDetails = React.useCallback(async function updateUserDetails(newData, userId) {
       console.log("Update User Details was Triggered!!!");
@@ -94,13 +94,11 @@ const UserModalTabProfile = ({userId, tabExpanded, formikRef}) =>  {
       console.log(newData);
       console.log(userId);
       try {
-        const userUpdated = await patchRequest(`/users/update/${userId}`, newData);
+        await patchRequest(`/users/update/${userId}`, newData);
       } catch (error) {
         console.log(error);
       }
-    })
-  
-  
+    }, []);
   
     // ---------------------------------------------------------
     // Function to fetch user details
@@ -218,7 +216,7 @@ const UserModalTabProfile = ({userId, tabExpanded, formikRef}) =>  {
     React.useEffect(() => {
       console.log("useEffect execution on Fullscreen Modal Dialog render");
       fetchUserDetails(userId);
-    }, []);
+    }, [fetchUserDetails, userId]);
     
     if (tabExpanded === 'Profile' && userData) {
       return (

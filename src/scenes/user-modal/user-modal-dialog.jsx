@@ -66,7 +66,7 @@ export default function UserModalDialog(props) {
     console.log("useEffect from 'Profile Tab'");
     console.log(props.expanded);
     console.log(props.userId);
-  }, []);
+  });
 
   return (
     <FormikSubmitContext.Provider value={formikRef}>
