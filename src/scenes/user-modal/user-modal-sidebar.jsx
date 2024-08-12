@@ -7,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Divider from '@mui/material/Divider';
 import { Box } from '@mui/material';
 
-function ModalSidebar() {
+function UserModalSidebar() {
 
     return(
         <Grid container spacing={2}>
@@ -35,4 +35,4 @@ function ModalSidebar() {
     )
 }
 
-export default ModalSidebar;
+export default UserModalSidebar;
