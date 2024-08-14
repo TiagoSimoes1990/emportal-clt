@@ -1,12 +1,31 @@
+// React API
 import * as React from 'react';
 
-import Grid from '@mui/material/Grid';
+// External components
+import Box from '@mui/material/Box';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-
 import Divider from '@mui/material/Divider';
-import { Box } from '@mui/material';
 
+// In-house components
+
+// API
+
+// Icons
+
+// Images imports
+
+// Styles imports
+
+// Style Objects
+
+// Create a FormikContext
+
+// Transitions
+
+// ------------------------
+// Sidebar component
+// ------------------------
 function UserModalSidebar({setTabIsOpen}) {
 
     return(
