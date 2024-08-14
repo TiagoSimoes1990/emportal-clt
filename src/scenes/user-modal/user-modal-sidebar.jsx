@@ -7,31 +7,35 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Divider from '@mui/material/Divider';
 import { Box } from '@mui/material';
 
-function UserModalSidebar() {
+function UserModalSidebar({setTabIsOpen}) {
 
     return(
-        <Grid container spacing={2}>
-            {/* Sidebar */}
-            <Grid item xs={3}>
-                <ListItemButton>
-                    <ListItemText primary="Profiles"/>
-                </ListItemButton>
-                <Divider />
-                <ListItemButton>
-                    <ListItemText primary="Item 2"/>
-                </ListItemButton>
-                <Divider />
-                <ListItemButton>
-                    <ListItemText primary="Item 3"/>
-                </ListItemButton>
-                <Divider />
-            </Grid>
-            <Grid item xs={9}>
-            <Box>
-                
-            </Box>
-            </Grid>
-        </Grid>
+        <Box>
+            <ListItemButton
+                onClick={ () => {
+                    setTabIsOpen('Profile');
+                }}
+            >
+                <ListItemText primary="Profile"/>
+            </ListItemButton>
+            <Divider />
+            <ListItemButton
+                onClick={ () => {
+                    setTabIsOpen('Absences');
+                }}
+            >
+                <ListItemText primary="Absences"/>
+            </ListItemButton>
+            <Divider />
+            <ListItemButton
+                onClick={ () => {
+                    setTabIsOpen('Timesheet');
+                }}
+            >
+                <ListItemText primary="Timesheet"/>
+            </ListItemButton>
+            <Divider/>
+        </Box>
     )
 }
 

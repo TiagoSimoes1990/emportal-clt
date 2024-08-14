@@ -18,6 +18,7 @@ import Grid from '@mui/material/Grid';
 import UserModalTabProfile from './user-modal-tab-profile';
 import UserModalTabAbsences from './user-modal-tab-absences';
 import UserModalTabTimesheet from './user-modal-tab-timesheet';
+import UserModalSidebar from './user-modal-sidebar';
 
 // API
 
@@ -97,30 +98,17 @@ export default function UserModalDialog(props) {
                 </Button>
               </Toolbar>
             </AppBar>
+            {/* ----------- User Modal Dialog ----------- */}
               <Grid container spacing={2} mt={7}>
+
+                {/* ----------- SIDEBAR ----------- */}
                 <Grid item xs={2}>
-                    <ListItemButton
-                      onClick={ () => {
-                        setTabIsOpen('Profile');
-                      }}>
-                        <ListItemText primary="Profile"/>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton
-                      onClick={ () => {
-                        setTabIsOpen('Absences');
-                      }}>
-                        <ListItemText primary="Absences"/>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton
-                      onClick={ () => {
-                        setTabIsOpen('Timesheet');
-                      }}>
-                        <ListItemText primary="Timesheet"/>
-                    </ListItemButton>
-                    <Divider />
+                  <UserModalSidebar
+                    setTabIsOpen={setTabIsOpen}
+                  />
                 </Grid>
+
+                {/* ----------- TABS ----------- */}
                 <Grid item xs={10} >
                   <UserModalTabProfile
                     tabExpanded = {tabIsOpen} 
@@ -138,6 +126,7 @@ export default function UserModalDialog(props) {
                   </UserModalTabTimesheet>
                 </Grid>
               </Grid>
+              {/* ----------------------------------------- */}
       </Dialog>
     </FormikSubmitContext.Provider>
   );
