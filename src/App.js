@@ -1,7 +1,7 @@
 import * as React from 'react';
 // External components
 import UserCard from './components/user-card';
-import ModalDialog from './scenes/user-modal/modal-dialog'
+import UserModalDialog from './scenes/user-modal/user-modal-dialog'
 import Topbar from './scenes/topbar/topbar';
 // Data import
 // Images imports
@@ -84,13 +84,13 @@ function App() {
               )}
             </Box>}
             {userID != null && 
-              <ModalDialog
+              <UserModalDialog
                 expanded = {open}
                 onClose = {handleClose}
                 // userId = {userList.find((user) => user.id === userID)?.id}
                 userId = {userID}
               >
-              </ModalDialog>}
+              </UserModalDialog>}
           </Box>
       </ThemeProvider>
     </React.Suspense>
